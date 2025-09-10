@@ -12,6 +12,7 @@ export default function Register() {
         e.preventDefault();
         try {
             setLoading(true);
+            console.log(name, email, password);
         } catch (error) {
             console.error(error);
             setLoading(false);
@@ -22,7 +23,7 @@ export default function Register() {
         <main>
             <div className="container">
                 <div className="row d-flex justify-content-center align-items-center vh-100">
-                    <div className="col-lg-5 offset-lg-4 shadow bg-light p-5">
+                    <div className="col-lg-5 shadow bg-light p-5">
                         <h2 className="mb-4 text-center">Register</h2>
                         <form onSubmit={handleSubmit}>
                             <input
@@ -49,8 +50,10 @@ export default function Register() {
                                 placeholder="Enter your password"
                             />
 
-                            <button className="btn btn-primary btn-raised">
-                                Submit
+                            <button className="btn btn-primary btn-raised"
+                                disabled={loading || !name || !email || !password}
+                            >
+                                {loading ? "Please wait.." : "Submit"}
                             </button>
                         </form>
                     </div>
