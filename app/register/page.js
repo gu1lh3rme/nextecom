@@ -1,18 +1,37 @@
 "use client";
-
 import { useState } from "react";
+import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
 
 export default function Register() {
-    const [name, setName] = useState("");
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
+    const [name, setName] = useState("Guilherme");
+    const [email, setEmail] = useState("gui@gmail.com");
+    const [password, setPassword] = useState("easy123");
     const [loading, setLoading] = useState(false);
+
+    const router = useRouter();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        
         try {
             setLoading(true);
-            console.log(name, email, password);
+            const response = await fetch(`${process.env.API}/register`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ name, email, password }),
+            });
+            const data = await response.json();
+            console.log(data);
+            if (!response.ok) {
+                toast.error(data.err);
+                setLoading(false);
+            } else {
+                toast.success(data.message);
+                setLoading(false);
+                router.push("/login");
+            }
+
         } catch (error) {
             console.error(error);
             setLoading(false);
