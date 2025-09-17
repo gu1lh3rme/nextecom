@@ -3,7 +3,7 @@ import { useState } from "react";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 
-export default function Register() {
+export default function Login() {
     const [name, setName] = useState("Guilherme");
     const [email, setEmail] = useState("gui@gmail.com");
     const [password, setPassword] = useState("easy123");
@@ -13,25 +13,10 @@ export default function Register() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        
+
         try {
             setLoading(true);
-            const response = await fetch(`${process.env.API}/register`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ name, email, password }),
-            });
-            const data = await response.json();
-            console.log(data);
-            if (!response.ok) {
-                toast.error(data.err);
-                setLoading(false);
-            } else {
-                toast.success(data.success);
-                setLoading(false);
-                router.push("/login");
-            }
-
+            
         } catch (error) {
             console.error(error);
             setLoading(false);
@@ -43,16 +28,8 @@ export default function Register() {
             <div className="container">
                 <div className="row d-flex justify-content-center align-items-center vh-100">
                     <div className="col-lg-5 shadow bg-light p-5">
-                        <h2 className="mb-4 text-center">Register</h2>
+                        <h2 className="mb-4 text-center">Login</h2>
                         <form onSubmit={handleSubmit}>
-                            <input
-                                type="text"
-                                value={name}
-                                onChange={(e) => setName(e.target.value)}
-                                className="form-control mb-3"
-                                placeholder="Enter your name"
-                            />
-
                             <input
                                 type="email"
                                 value={email}
@@ -70,7 +47,7 @@ export default function Register() {
                             />
 
                             <button className="btn btn-primary btn-raised"
-                                disabled={loading || !name || !email || !password}
+                                disabled={loading || !email || !password}
                             >
                                 {loading ? "Please wait.." : "Submit"}
                             </button>
