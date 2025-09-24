@@ -2,9 +2,9 @@
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
+import { signIn } from "next-auth/react"
 
 export default function Login() {
-    const [name, setName] = useState("Guilherme");
     const [email, setEmail] = useState("gui@gmail.com");
     const [password, setPassword] = useState("easy123");
     const [loading, setLoading] = useState(false);
@@ -16,7 +16,20 @@ export default function Login() {
 
         try {
             setLoading(true);
-            
+            const result = await signIn('credentials', {
+                redirect: false,
+                email,
+                password
+            })
+
+            if (result?.error) {
+                toast.error(result.error)
+                setLoading(false)
+            } else {
+                toast.success("Logged in succesfully")
+                router.push('/')
+            }
+
         } catch (error) {
             console.error(error);
             setLoading(false);
