@@ -10,8 +10,26 @@ export const authOptions = {
     providers: [
         CredentialsProvider({
             async authorize(credentials, req) {
-                await dbConnect();
+                dbConnect();
+                const { email, password } = credentials;
+                const user = await User.findOne({ email });
+
+                if (!user) {
+                    throw new Error("Invalid email or password");
+                }
+
+                const isPasswordMatched = await bcrypt.compare(password, user.password);
+                if (!isPasswordMatched) {
+                    throw new Error("Invalid email or password");
+                }
+
+                return user;
             }
         })
-    ]
+    ],
+    secret: process.env.NEXTAUTH_SECRET,
+    pages: {
+        signIn: "/login",
+        error: "/login", // Error code passed in query string as ?error=
+    },
 }
